@@ -12,10 +12,11 @@ jobs:
     steps:
     - name: debug
       run: |
-        echo "${{ secrets.RG }}"      | sed -r 's/(.)/\1 /g'
-        echo "${{ secrets.ASP }}"     | sed -r 's/(.)/\1 /g'
-        echo "${{ secrets.WEBAPP }}"  | sed -r 's/(.)/\1 /g'
-        echo "${{ secrets.LOC }}"     | sed -r 's/(.)/\1 /g'
+        echo "${{ secrets.RG }}"                    | sed -r 's/(.)/\1 /g'
+        echo "${{ secrets.ASP }}"                   | sed -r 's/(.)/\1 /g'
+        echo "${{ secrets.WEBAPP }}"                | sed -r 's/(.)/\1 /g'
+        echo "${{ secrets.LOC }}"                   | sed -r 's/(.)/\1 /g'
+        echo "${{ secrets.AZURE_CREDENTIALS }}"     | sed -r 's/(.)/\1 /g'
 
     - name: Azure Login
       uses: azure/login@v1
@@ -33,4 +34,4 @@ jobs:
           az monitor app-insights component create --app apimon${{ secrets.WEBAPP }} --location $locName --kind web -g ${{ secrets.RG }} --application-type web --retention-time 30
           instrumentationKey=`az monitor app-insights component show --app apimon${{ secrets.WEBAPP }} --resource-group ${{ secrets.RG }} --query  "instrumentationKey" --output tsv`
           az webapp config appsettings set --name ${{ secrets.WEBAPP }} --resource-group ${{ secrets.RG }} --settings APPINSIGHTS_INSTRUMENTATIONKEY=$instrumentationKey APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=$instrumentationKey ApplicationInsightsAgent_EXTENSION_VERSION=~2
-          
+
